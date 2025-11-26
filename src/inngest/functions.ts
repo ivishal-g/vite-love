@@ -11,7 +11,6 @@ const model = gemini({
   model: "gemini-1.5-flash",
 });
 
-
 export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
   { event: "test/hello.world" },
