@@ -23,6 +23,17 @@ enum MessageType {
   ERROR
 }
 
+model Project {
+  id    String      @id   @default(uuid())
+  name  String
+  userId String
+  createdAt   DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  
+  messages  Message[]
+}
+
+
 model Message {
   id        String        @id     @default(ulid())
   content   String
@@ -31,6 +42,9 @@ model Message {
   
   createdAt DateTime       @default(now())
   updatedAt DateTime        @updatedAt
+
+  projectId  String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade )
 
   fragment  Fragment?
 }
