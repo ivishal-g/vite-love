@@ -8,7 +8,7 @@ import { PROMPT } from "@/prompt";
 import prisma from "@/lib/prisma";
 
 const model = gemini({ 
-  model: "gemini-1.5-flash",
+  model: "gemini-1.5-flash-8b",
 });
 
 interface AgentState {
@@ -21,7 +21,7 @@ export const codeAgentFunction = inngest.createFunction(
   { event: "code-agent/run" },
   async ({ event, step }) =>{
     const sandboxId = await step.run("get-sandbox-id", async () => {
-      const sandbox = await Sandbox.create("vibe-nextjs-test-vishal");
+      const sandbox = await Sandbox.create("vite-nextjs-test-vishal");
       return sandbox.sandboxId;
     })
 
@@ -126,7 +126,7 @@ export const codeAgentFunction = inngest.createFunction(
           const lastAssistantMessageText = lastAssistantTextMessageContent(result);
 
           if(lastAssistantMessageText && network) {
-            if(lastAssistantMessageText.includes("<tast_summary>")){
+            if(lastAssistantMessageText.includes("<task_summary>")){
               network.state.data.summary = lastAssistantMessageText;
             }
           }
@@ -149,15 +149,12 @@ export const codeAgentFunction = inngest.createFunction(
       },
     })
 
-    const result = await network.run(event.data.value);
-
+    const result = await network.run(event.data?.value ?? {});
+    
     const isError = !result.state.data.summary || Object.keys(result.state.data.files || {}).length === 0;
-
-
 
     const sandboxUrl = await step.run("get-sandbox-url", async () => {
       const sandbox = await getSandbox(sandboxId);
-
       const host = sandbox.getHost(3000);
       return `https://${host}`;
     });
@@ -177,14 +174,11 @@ export const codeAgentFunction = inngest.createFunction(
 
     await step.run("save-result", async () => {
       return await prisma.message.create({
-        projectId: event.data.projectId,
-        content: result.state.data.summary,
-        role: "ASSISTANT",
-        type: "RESULT",
-        fragment: {
-          sandboxUrl: sandboxUrl,
-          title: "Fragment",
-          files: result.state.data.files,
+        data: {
+          projectId: event.data.projectId,
+          content: result.state.data.summary,
+          role: "ASSISTANT",
+          type: "RESULT",
         }
       })
 
