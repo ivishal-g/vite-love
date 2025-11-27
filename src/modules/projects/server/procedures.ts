@@ -27,12 +27,6 @@ export const projectsRouter = createTRPCRouter({
     getMany: protectedProcedure
         .query(async ({ ctx }) => {
             try {
-                console.log('Auth context:', {
-                    userId: ctx.auth.userId,
-                    sessionId: ctx.auth.sessionId,
-                    orgId: ctx.auth.orgId
-                });
-                
                 const projects = await prisma.project.findMany({
                     where: {
                         userId: ctx.auth.userId,
@@ -48,7 +42,7 @@ export const projectsRouter = createTRPCRouter({
                 console.error('Error in projects.getMany:', error);
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
-                    message: error instanceof Error ? error.message : 'Failed to fetch projects',
+                    message: 'Failed to fetch projects'
                 });
             }
         }),
