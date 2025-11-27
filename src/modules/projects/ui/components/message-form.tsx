@@ -43,8 +43,7 @@ export const MessageForm = ({ projectId }: Props) => {
             queryClient.invalidateQueries(
                 trpc.messages.getMany.queryOptions({
                     projectId,
-                    /// boom boom chao
-                    value: form.getValues("value"),
+                    value: "",
                 }),
             );
             queryClient.invalidateQueries(

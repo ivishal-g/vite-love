@@ -1,12 +1,12 @@
 import { Fragment, useCallback, useMemo, useState } from "react";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./ui/resizable";
-import { Hint } from "./hint";
 import { Button } from "./ui/button";
 import { CopyCheckIcon, CopyIcon } from "lucide-react";
-import { CodeView } from "./code-view";
 import { convertFilesToTreeItems } from "@/lib/utils";
-import { TreeView } from "./tree-view";
 import { Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "./ui/breadcrumb";
+import { TreeView } from "./tree-view";
+import { Hint } from "./hint";
+import { CodeView } from "./code-view";
 
 
 type FileCollection = { [path: string]: string};
@@ -115,7 +115,7 @@ export const FileExplorer = ({
     const handleCopy = useCallback(() => {
         if(selectedFile){
             navigator.clipboard.writeText(files[selectedFile]);
-            setCopied(false);
+            setCopied(true);
             setTimeout(() => {
                 setCopied(false);
             }, 2000)
@@ -150,7 +150,7 @@ export const FileExplorer = ({
                             </Hint>
                         </div>
                         <div className="flex-1 overflow-auto">
-                            <CodeView 
+                            <CodeView
                                 code={files[selectedFile]}
                                 lang={getLanguageFromExtension(selectedFile)}
                             />
