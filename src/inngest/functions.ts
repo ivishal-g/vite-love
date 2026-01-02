@@ -8,7 +8,7 @@ import { PROMPT } from "@/prompt";
 import prisma from "@/lib/prisma";
 
 const model = gemini({ 
-  model: "gemini-1.5-flash-8b",
+  model: "gemini-2.0-flash",
 });
 
 interface AgentState {
