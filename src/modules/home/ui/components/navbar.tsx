@@ -16,6 +16,7 @@ import Link from "next/link";
 export const Navbar = () => {
   const isScrolled = useScroll();
 
+  
   return (
     <nav
       className={cn(
